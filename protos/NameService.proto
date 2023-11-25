@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.iotservice";
+option java_outer_classname = "IoTServiceProto";
+option objc_class_prefix = "TEMP";
+
+package name_service;
+
+service NameService {
+  // Register Server
+  rpc RegisterServer (ServerData) returns (StatusReply){}
+  // Unregister Server
+  rpc UnregisterServer (ServerName) returns (StatusReply){}
+  // Find server by name
+  rpc LookupServer (ServerName) returns (ServerData){}
+}
+
+message StatusReply {
+  string status = 1;
+}
+
+message ServerData {
+  string name = 1;
+  string address = 2;
+  string port = 3;
+}
+
+message ServerName {
+  string name = 1;
+}
+
+message EmployeeTitle {
+  string title = 1;
+}
