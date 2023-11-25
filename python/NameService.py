@@ -38,7 +38,7 @@ class NameServer(NameService_pb2_grpc.NameServiceServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     NameService_pb2_grpc.add_NameServiceServicer_to_server(NameServer(), server)
-    tmp_port = server.add_insecure_port('[::]:'+'5000')
+    tmp_port = server.add_insecure_port('[::]:'+'50051')
     print(tmp_port)
     server.start()
     server.wait_for_termination()

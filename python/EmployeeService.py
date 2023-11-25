@@ -78,10 +78,10 @@ class EmployeeServer(EmployeeService_pb2_grpc.EmployeeServiceServicer):
 
 
 def register_in_name_service():
-    with grpc.insecure_channel(const.IP + ':' + '5000') as channel2:
+    with grpc.insecure_channel(const.IP + ':' + const.PORT) as channel2:
         stub2 = NameService_pb2_grpc.NameServiceStub(channel2)
 
-        response = stub2.RegisterServer(NameService_pb2.ServerData(name='server1', address='127.0.0.1', port='5001'))
+        response = stub2.RegisterServer(NameService_pb2.ServerData(name='server1', address='127.0.0.1', port='50051'))
         print(str(response))
 
     return None
@@ -89,7 +89,7 @@ def register_in_name_service():
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     EmployeeService_pb2_grpc.add_EmployeeServiceServicer_to_server(EmployeeServer(), server)
-    tmp_port = server.add_insecure_port('[::]:' + '5001')
+    tmp_port = server.add_insecure_port('[::]:' + '50051')
     print(tmp_port)
     register_in_name_service()
     server.start()

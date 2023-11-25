@@ -56,6 +56,5 @@ def find_server():
 
 if __name__ == '__main__':
     logging.basicConfig()
-    server = None
     server = find_server()
     run(server)
