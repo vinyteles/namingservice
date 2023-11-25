@@ -1,6 +1,6 @@
 from concurrent import futures
 import logging
-
+import socket
 import grpc
 import EmployeeService_pb2
 import EmployeeService_pb2_grpc
@@ -78,10 +78,11 @@ class EmployeeServer(EmployeeService_pb2_grpc.EmployeeServiceServicer):
 
 
 def register_in_name_service():
+    ip_address = str(socket.gethostbyname(socket.gethostname()))
     with grpc.insecure_channel(const.IP + ':' + const.PORT) as channel2:
         stub2 = NameService_pb2_grpc.NameServiceStub(channel2)
 
-        response = stub2.RegisterServer(NameService_pb2.ServerData(name='server1', address='127.0.0.1', port='50051'))
+        response = stub2.RegisterServer(NameService_pb2.ServerData(name='server1', address=ip_address, port='50051'))
         print(str(response))
 
     return None
