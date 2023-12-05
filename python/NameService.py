@@ -11,11 +11,11 @@ name_service_table = {}
 
 class NameServer(NameService_pb2_grpc.NameServiceServicer):
     def RegisterServer(self, request, context):
+        print("registrando...")
         tmp_server = {"address": request.address, "port": request.port}
         name_service_table[request.name] = tmp_server
         print("adding new Server")
         print(str(name_service_table))
-
         return NameService_pb2.StatusReply(status='OK')
 
     def UnregisterServer(self, request, context):
@@ -38,7 +38,7 @@ class NameServer(NameService_pb2_grpc.NameServiceServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     NameService_pb2_grpc.add_NameServiceServicer_to_server(NameServer(), server)
-    tmp_port = server.add_insecure_port('[::]:'+'50051')
+    tmp_port = server.add_insecure_port('[::]:'+ const.PORT)
     print(tmp_port)
     server.start()
     server.wait_for_termination()

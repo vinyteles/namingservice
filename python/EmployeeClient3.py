@@ -50,7 +50,7 @@ def find_server():
     with grpc.insecure_channel(const.IP + ':' + const.PORT) as channel1:
         stub1 = NameService_pb2_grpc.NameServiceStub(channel1)
 
-        server = stub1.LookupServer(NameService_pb2.ServerName(name="Abc"))
+        server = stub1.LookupServer(NameService_pb2.ServerName(name="Xyz"))
     print(str(server))
     return server
 
