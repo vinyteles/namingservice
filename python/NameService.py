@@ -11,7 +11,6 @@ name_service_table = {}
 
 class NameServer(NameService_pb2_grpc.NameServiceServicer):
     def RegisterServer(self, request, context):
-        print("registrando...")
         tmp_server = {"address": request.address, "port": request.port}
         name_service_table[request.name] = tmp_server
         print("adding new Server")
@@ -19,7 +18,13 @@ class NameServer(NameService_pb2_grpc.NameServiceServicer):
         return NameService_pb2.StatusReply(status='OK')
 
     def UnregisterServer(self, request, context):
+        print(str(request.name))
         name_service_table.pop(request.name)
+        print("removing new Server")
+        print(str(name_service_table))
+
+        return NameService_pb2.StatusReply(status='OK')
+
 
     def LookupServer(self, request, context):
         tmp_server = {"name": "", "address": "", "port": ""}

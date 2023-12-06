@@ -76,21 +76,27 @@ class EmployeeServer(EmployeeService_pb2_grpc.EmployeeServiceServicer):
       list.employee_data.append(emp_data)
     return list
 
-
 def register_in_name_service():
     ip_address = str(socket.gethostbyname(socket.gethostname()))
     with grpc.insecure_channel(const.IP + ':' + const.PORT) as channel2:
-        stub2 = NameService_pb2_grpc.NameServiceStub(channel2)
+        stub = NameService_pb2_grpc.NameServiceStub(channel2)
 
-        response = stub2.RegisterServer(NameService_pb2.ServerData(name='Abc', address=ip_address, port='50051'))
+        response = stub.RegisterServer(NameService_pb2.ServerData(name='Abc', address=ip_address, port='50051'))
         print(str(response))
 
     return None
 
+def remove_in_name_service():
+    with grpc.insecure_channel(const.IP + ':' + const.PORT) as channel2:
+        stub = NameService_pb2_grpc.NameServiceStub(channel2)
+
+        response = stub.UnregisterServer(NameService_pb2.ServerName(name='Abc'))
+        print(str(response))
+
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     EmployeeService_pb2_grpc.add_EmployeeServiceServicer_to_server(EmployeeServer(), server)
-    tmp_port = server.add_insecure_port('[::]:' + '50051')
+    tmp_port = server.add_insecure_port('[::]:' + const.PORT)
     print(tmp_port)
     register_in_name_service()
     server.start()
@@ -99,4 +105,7 @@ def serve():
 
 if __name__ == '__main__':
     logging.basicConfig()
-    serve()
+    try:
+        serve()
+    except KeyboardInterrupt:
+        remove_in_name_service()
